@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Featherxz - Linktree</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fugaz+One&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+    <div id="splash-screen">
+        <h1 class="splash-text">Click to continue.</h1>
+    </div>
+
+    <div class="app-container menu-open"> 
+        <aside class="sidebar">
+            <h2>Menu</h2>
+            <ul>
+                <li><a href="#linktree-view">Linktree</a></li> 
+                <li><a href="#about-view">About</a></li>
+                <li><a href="#more-view">More</a></li>
+                <li><a href="#music-view">Music</a></li>
+            </ul>
+            
+            <div class="music-player-controls">
+                <h3>Music Player</h3>
+                <div class="timeline-container">
+                    <input type="range" id="music-timeline" min="0" max="100" value="0">
+                    <div class="time-display">
+                        <span id="current-time">0:00</span> / <span id="duration">0:00</span>
+                    </div>
+                </div>
+                <div class="controls-row">
+                    <button id="play-pause-btn" aria-label="Play/Pause Music">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <div class="volume-container">
+                        <i class="fas fa-volume-up" id="volume-icon"></i>
+                        <input type="range" id="music-volume" min="0" max="1" step="0.05" value="0.5">
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="content-area">
+            <button id="menu-toggle-btn" aria-label="Toggle Side Menu">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+
+            <section class="page-view" id="linktree-view">
+                <section class="profile-section">
+                    <div class="banner-placeholder">
+                        </div>
+                    
+                    <div class="avatar-container">
+                        <img src="images/avatar.png" alt="User Avatar" class="avatar">
+                    </div>
+                    
+                    <h1 class="username">featherxz</h1>
+                    <p class="bio">feather's Socials Linktree</p>
+                </section>
+
+                <section class="links-section">
+                    <a href="https://github.io/featherxz/site" target="_blank" class="link-item">
+                        <img src="icons/github-icon.png" alt="GitHub" class="link-icon">
+                    </a>
+
+                    <a href="https://youtube.com/@Featherxz" target="_blank" class="link-item">
+                        <img src="icons/youtube-icon.png" alt="YouTube" class="link-icon">
+                    </a>
+
+                    <a href="https://bsky.app/profile/featherxz07.bsky.social" target="_blank" class="link-item">
+                        <img src="icons/bsky-icon.png" alt="Bluesky" class="link-icon">
+                    </a>
+
+                    <a href="https://x.com/featherxz07" target="_blank" class="link-item">
+                        <img src="icons/x-icon.png" alt="Twitter/X" class="link-icon">
+                    </a>
+
+                    <a href="https://pin.it/1dbLQelOU" target="_blank" class="link-item">
+                        <img src="icons/pinterest-icon.png" alt="Pinterest" class="link-icon">
+                    </a>
+
+                    <a href="https://discord.gg/gZeDV99SgX" target="_blank" class="link-item">
+                        <img src="icons/discord-icon.png" alt="Discord" class="link-icon">
+                    </a>
+                </section>
+            </section>
+            
+            <section class="page-view" id="about-view">
+                <div class="about-content">
+                    <h2>About featherxz</h2>
+                    <p>Hello! I'm featherxz, a developer, gamer, and digital artist who loves exploring new technologies and building fun projects. This is my central hub for all my social media and active projects.</p>
+                    <p>I focus primarily on web development, using modern CSS techniques (like the one used to create this single-page design!) and JavaScript frameworks when needed.</p>
+                    <p>Find my latest code projects on GitHub or check out my quick thoughts on X/Twitter. Thanks for stopping by!</p>
+                </div>
+            </section>
+
+            <section class="page-view" id="more-view">
+                <div class="about-content"> 
+                    <h2>More Info & Contact</h2>
+                    
+                    <details class="dropdown">
+                        <summary>Frequently Asked Questions (FAQ)</summary>
+                        <div class="dropdown-content">
+                            <p><strong>Q: What are your main programming languages?</strong></p>
+                            <p>A: I primarily work using Python, HTML and AI (Artificial Intelligence).</p>
+                            <p><strong>Q: Are your commissions open?</strong></p>
+                            <p>A: Not at the moment, but I will announce on my social media when they are!</p>
+                        </div>
+                    </details>
+
+                    <details class="dropdown">
+                        <summary>Projects</summary>
+                        <div class="dropdown-content">
+                            <details class="sub-dropdown">
+                                <summary>Shade SMP</summary>
+                                <div class="sub-dropdown-content">
+                                    <p><strong>Status:</strong> 60%</p>
+                                    <p><strong>Version:</strong> Java 1.20.4+</p>
+                                    <p>My public survival multiplayer server for Minecraft. Join the Discord for more info!</p>
+                                </div>
+                            </details>
+                            <details class="sub-dropdown">
+                                <summary>Chemically Optimized</summary>
+                                <div class="sub-dropdown-content">
+                                    <p><strong>Status:</strong> Not Released</p>
+                                    <p><strong>Type:</strong> Minecraft Modpack</p>
+                                    <p>A modpack which makes the game run a lot smoother using mods like Sodium, Lithium, etc.</p>
+                                </div>
+                            </details>
+                            <details class="sub-dropdown">
+                                <summary>Portfolio Website v2</summary>
+                                <div class="sub-dropdown-content">
+                                    <p><strong>Status:</strong> Planning Phase</p>
+                                    <p><strong>Stack:</strong> React, Three.js</p>
+                                    <p>The next iteration of my personal portfolio, focusing on 3D animations and interactivity.</p>
+                                </div>
+                            </details>
+                            <details class="sub-dropdown">
+                                <summary>Game Development Log</summary>
+                                <div class="sub-dropdown-content">
+                                    <p><strong>Status:</strong> Ongoing</p>
+                                    <p><strong>Engine:</strong> Godot</p>
+                                    <p>A log of my journey learning game development with the Godot engine. Will include small prototypes and tutorials.</p>
+                                </div>
+                            </details>
+                        </div>
+                    </details>
+
+                    <details class="dropdown">
+                        <summary>Other Contacts</summary>
+                        <div class="dropdown-content">
+                            <p>You can reach out to me through the following channels:</p>
+                            <p class="support-link"><a href="https://discord.gg/gZeDV99SgX" target="_blank">Discord Server</a></p>
+                            <p class="support-link"><a href="https://www.instagram.com/featherxz07" target="_blank">Instagram</a></p>
+                            <p>Email: <a href="mailto:featherz07@gmail.com">featherz07@gmail.com</a></p>
+                        </div>
+                    </details>
+
+                    <details class="dropdown">
+                        <summary>Support My Work</summary>
+                        <div class="dropdown-content">
+                            <p>If you enjoy my content and projects, consider supporting me through these platforms. Your support helps me dedicate more time to creating!</p>
+                            <p class="support-link"><a href="#" target="_blank">Ko-fi</a></p>
+                            <p class="support-link"><a href="#" target="_blank">Patreon</a></p>
+                            <p class="support-link"><a href="#" target="_blank">GitHub Sponsors</a></p>
+                        </div>
+                    </details>
+
+                    <details class="dropdown">
+                        <summary>Website Changelog</summary>
+                        <div class="dropdown-content">
+                            <p><strong>v1.1.0 (Current):</strong></p>
+                            <ul>
+                                <li>Added dropdown categories to the 'More' page.</li>
+                                <li>Minor style adjustments.</li>
+                            </ul>
+                            <p><strong>v1.0.0:</strong></p>
+                            <ul>
+                                <li>Initial release of the single-page application linktree.</li>
+                            </ul>
+                        </div>
+                    </details>
+                    </div>
+            </section>
+            
+            <section class="page-view" id="music-view">
+                <div class="about-content">
+                    <div class="music-cover-container">
+                        <img src="images/music-cover.png" alt="Music Cover Art" class="music-cover">
+                    </div>
+                    
+                    <h2>Current Background Music</h2>
+                    <p>The music currently playing is: <strong>Horizon</strong> from <strong>Dying Light</strong>.</p>
+                    <p>
+                        This track is an ambient piece that complements the site's dark aesthetic. 
+                        You can control playback, volume, and track position using the <strong>Music Player</strong> controls pinned at the absolute bottom of the menu.
+                    </p>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

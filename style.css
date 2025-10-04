@@ -1,0 +1,855 @@
+/* --- Global Styles & Layout --- */
+:root {
+    --primary-color: #007bff; /* A nice blue for accents */
+    --background-color: #2c2f33; /* Dark page background */
+    --card-color: #23272a; /* Darker card/panel color (default sidebar/content color) */
+    --text-color: #ffffff;
+    --link-bg: rgba(64, 68, 75, 0.4); /* Semi-transparent link background for hover */
+    --link-hover-bg: rgba(92, 96, 102, 0.6); /* Semi-transparent link hover */
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--background-color); 
+    color: var(--text-color);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.app-container {
+    display: flex;
+    width: 90%;
+    max-width: 1200px;
+    height: 90vh;
+    
+    background-color: var(--card-color); 
+    
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* ----------------------------------------------------- */
+/* --- Layout/Toggle Menu Styles (FIXED) --- */
+/* ----------------------------------------------------- */
+
+/* --- Sidebar Styling --- */
+.sidebar {
+    width: 250px;
+    padding-top: 30px; 
+    padding-bottom: 20px;
+    background-color: rgba(32, 34, 37, 0.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px); 
+    border-right: 1px solid rgba(54, 57, 63, 0.7); 
+    position: relative;
+    z-index: 1; 
+    overflow: hidden;
+    
+    display: flex;
+    flex-direction: column; 
+    justify-content: space-between; 
+    
+    transition: width 0.3s ease, padding 0.3s ease, border-right 0.3s ease; 
+}
+
+/* HIDE SIDEBAR STRUCTURALLY WHEN .menu-open IS NOT PRESENT */
+.app-container:not(.menu-open) .sidebar {
+    width: 0;
+    padding: 0;
+    border-right: none;
+}
+
+/* FIX: Explicitly hide the contents of the sidebar when it's collapsed */
+.app-container:not(.menu-open) .sidebar h2,
+.app-container:not(.menu-open) .sidebar ul,
+.app-container:not(.menu-open) .sidebar .music-player-controls {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.1s ease, visibility 0.1s;
+}
+
+/* Show contents when menu is open (default state) */
+.app-container.menu-open .sidebar h2,
+.app-container.menu-open .sidebar ul,
+.app-container.menu-open .sidebar .music-player-controls {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease 0.3s; /* Delay fade in */
+}
+
+
+/* --- Pseudo-element for the Blurred and Darkened Sidebar Image --- */
+.sidebar::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    
+    background-image: url('images/menu-background.png');
+    background-size: cover;
+    background-position: center;
+    
+    filter: blur(5px);
+    
+    background-color: rgba(0, 0, 0, 0.6);
+    background-blend-mode: multiply; 
+
+    z-index: -1;
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--text-color); 
+    padding: 0 20px;
+}
+
+.sidebar ul {
+    list-style: none;
+    flex-grow: 1; 
+}
+
+.sidebar li a {
+    display: block;
+    padding: 15px 20px;
+    text-decoration: none;
+    color: #b9bbbe;
+    transition: background-color 0.2s;
+}
+
+.sidebar li a:hover {
+    background-color: var(--link-hover-bg); 
+}
+
+/* ----------------------------------------------------- */
+/* * SPA Implementation: Highlight the active link *
+/* ----------------------------------------------------- */
+
+/* Rule 1: Reset all links (that correspond to views) when ANY view is targeted. */
+.app-container:has(.page-view:target) .sidebar li a {
+    background-color: transparent;
+    color: #b9bbbe;
+    border-radius: 0;
+}
+
+/* Rule 2: Highlight the specific link whose view is currently targeted. */
+.app-container:has(#linktree-view:target) .sidebar li a[href="#linktree-view"],
+.app-container:has(#about-view:target) .sidebar li a[href="#about-view"],
+.app-container:has(#more-view:target) .sidebar li a[href="#more-view"],
+.app-container:has(#music-view:target) .sidebar li a[href="#music-view"] {
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    border-radius: 0 5px 5px 0;
+}
+
+/* Rule 3: Highlight Linktree on initial load (when no fragment is in URL) */
+body:not(:has(:target)) .sidebar li a[href="#linktree-view"] {
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    border-radius: 0 5px 5px 0;
+}
+
+
+/* ----------------------------------------------------- */
+/* --- Music Player Controls Styling --- */
+/* ----------------------------------------------------- */
+.music-player-controls {
+    padding: 0 20px;
+    margin-top: 20px;
+    border-top: 1px solid rgba(54, 57, 63, 0.7);
+    padding-top: 15px;
+    background-color: rgba(0, 0, 0, 0.15); 
+}
+
+.music-player-controls h3 {
+    font-size: 1em;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+/* Timeline/Time Display */
+.timeline-container {
+    margin-bottom: 15px;
+}
+
+#music-timeline {
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 5px;
+    background: #555;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px 0;
+}
+
+#music-timeline::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--primary-color);
+}
+
+#music-timeline::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    border: none;
+}
+
+.time-display {
+    font-size: 0.8em;
+    display: flex;
+    justify-content: flex-end;
+    color: #b9bbbe;
+}
+
+/* Controls Row (Play/Pause & Volume) */
+.controls-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+#play-pause-btn {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    flex-shrink: 0;
+}
+
+#play-pause-btn:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+/* Volume Control Styling */
+.volume-container {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    gap: 8px;
+}
+
+#volume-icon {
+    font-size: 1.1em;
+    color: #b9bbbe;
+    flex-shrink: 0;
+    width: 20px;
+    text-align: center;
+}
+
+#music-volume {
+    flex-grow: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    background: #555;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#music-volume::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #b9bbbe;
+}
+
+#music-volume::-moz-range-thumb {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #b9bbbe;
+    border: none;
+}
+
+
+/* --- Content Area Styling --- */
+.content-area {
+    flex-grow: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto; 
+    
+    position: relative;
+    z-index: 0;
+    
+    background-color: var(--card-color); 
+}
+
+/* FIX: Hide all pages by default, only show the targeted one */
+.page-view {
+    display: none; 
+    width: 100%;
+}
+
+.page-view:target {
+    display: block; 
+}
+
+/* Show the default view (#linktree-view) if no fragment is present */
+body:not(:has(:target)) #linktree-view {
+    display: block;
+}
+
+
+/* --- Content Area Background Image --- */
+.content-area::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    
+    background-image: url('images/background.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    
+    filter: blur(3px);
+    
+    background-color: rgba(0, 0, 0, 0.2); 
+    background-blend-mode: multiply;
+
+    z-index: -1;
+}
+
+
+/* --- Profile Section (Banner & Avatar) --- */
+.profile-section {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto 30px; 
+    text-align: center;
+    position: relative;
+    padding-top: 80px; 
+    z-index: 1; 
+}
+
+.banner-placeholder {
+    width: 100%;
+    height: 150px;
+    
+    background-image: url('images/banner.png'); 
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    
+    border-radius: 10px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.avatar-container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 10px;
+    border: 5px solid var(--card-color); 
+    border-radius: 50%;
+    overflow: hidden;
+    z-index: 2; 
+    box-shadow: 0 0 0 4px var(--background-color); 
+    transition: transform 0.3s ease;
+}
+
+.avatar-container:hover {
+    transform: scale(1.05);
+}
+
+.avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.username {
+    font-size: 2em;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.bio {
+    color: #b9bbbe;
+}
+
+/* --- Links Section --- */
+.links-section {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
+    padding: 20px;
+    background-color: var(--card-color);
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    z-index: 1; 
+    margin: 20px auto;
+}
+
+.link-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 60px;
+    background-color: var(--link-bg); 
+    border-radius: 10px; 
+    text-decoration: none;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.link-item:hover {
+    background-color: var(--link-hover-bg); 
+    transform: translateY(-3px);
+}
+
+.link-icon {
+    width: 40px;
+    height: 40px;
+}
+
+/* --------------------------------- */
+/* --- ABOUT & MORE VIEW SPECIFIC STYLES --- */
+/* --------------------------------- */
+#about-view, #more-view, #music-view {
+    padding-top: 50px;
+}
+
+.about-content {
+    width: 100%;
+    max-width: 600px;
+    padding: 30px;
+    background-color: var(--card-color);
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    text-align: left;
+    margin: 0 auto;
+}
+
+.about-content h2 {
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    border-bottom: 2px solid rgba(0, 123, 255, 0.5);
+    padding-bottom: 10px;
+}
+
+.about-content p {
+    margin-bottom: 15px;
+    line-height: 1.6;
+    color: #b9bbbe;
+}
+
+/* --------------------------------- */
+/* --- Music Cover Art Styling --- */
+/* --------------------------------- */
+.music-cover-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.music-cover {
+    width: 250px;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 5px solid var(--primary-color);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 123, 255, 0.3);
+    transition: transform 0.3s ease;
+}
+
+.music-cover:hover {
+    transform: scale(1.02);
+}
+
+/* --------------------------------- */
+/* --- DROPDOWN CATEGORY STYLES --- */
+/* --------------------------------- */
+.dropdown {
+    margin-bottom: 25px;
+    border: none;
+    border-radius: 0;
+    overflow: visible;
+    width: 100%; 
+}
+
+.dropdown summary {
+    padding: 15px 15px 15px 5px;
+    background-color: transparent;
+    color: var(--primary-color);
+    cursor: pointer;
+    list-style: none;
+    position: relative;
+    transition: color 0.2s;
+    font-weight: 700;
+    border-bottom: 2px solid var(--link-bg);
+    margin-bottom: 10px;
+}
+
+.dropdown summary:hover {
+    background-color: transparent; 
+    color: var(--text-color);
+}
+
+/* Add a custom marker ('+') */
+.dropdown summary::after {
+    content: '+';
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.5em;
+    color: #b9bbbe;
+    transition: transform 0.3s ease;
+}
+
+/* Rotate the marker when the dropdown is open */
+.dropdown[open] > summary::after {
+    transform: translateY(-50%) rotate(45deg);
+    color: var(--text-color);
+}
+
+.dropdown-content {
+    padding: 20px;
+    background-color: rgba(35, 39, 42, 0.9);
+    border-radius: 8px;
+    color: #b9bbbe;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Support My Work Link Styles */
+.support-link {
+    display: inline-block;
+    margin-right: 15px;
+    margin-bottom: 5px;
+}
+
+.support-link a {
+    display: block;
+    padding: 8px 15px;
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.2s, transform 0.2s;
+    font-weight: 700;
+}
+
+.support-link a:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+/* END MODIFIED DROPDOWN STYLES */
+
+/* --------------------------------- */
+/* --- SUB-DROPDOWN STYLES (NESTED) --- */
+/* --------------------------------- */
+.sub-dropdown {
+    margin-top: 10px;
+    border: 1px solid rgba(54, 57, 63, 1);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.sub-dropdown summary {
+    padding: 12px 15px;
+    background-color: var(--card-color);
+    font-weight: normal;
+    font-size: 0.9em;
+    position: relative;
+    cursor: pointer;
+    list-style: none;
+    transition: background-color 0.2s;
+}
+
+.sub-dropdown summary:hover {
+    background-color: rgba(64, 68, 75, 0.6);
+}
+
+/* Marker for sub-dropdown */
+.sub-dropdown summary::after {
+    content: '+';
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: transform 0.3s ease;
+}
+
+.sub-dropdown[open] > summary::after {
+    transform: translateY(-50%) rotate(45deg);
+}
+
+.sub-dropdown-content {
+    padding: 15px;
+    background-color: var(--background-color);
+    font-size: 0.9em;
+    border-top: 1px solid rgba(54, 57, 63, 1);
+}
+
+.sub-dropdown-content p {
+    margin-bottom: 8px;
+    /* WHITE TEXT COLOR */
+    color: var(--text-color); 
+}
+
+.sub-dropdown-content p:last-child {
+    margin-bottom: 0;
+}
+
+/* --------------------------------- */
+/* --- Menu Toggle Button (NEW) --- */
+/* --------------------------------- */
+#menu-toggle-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 10;
+    
+    width: 35px;
+    height: 35px;
+    border: none;
+    border-radius: 50%;
+    
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    font-size: 1.1em;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    transition: background-color 0.2s, left 0.3s ease; /* Transition 'left' */
+}
+
+#menu-toggle-btn:hover {
+    background-color: #0056b3;
+}
+
+#menu-toggle-btn i {
+    transition: transform 0.3s ease; /* For rotation */
+}
+
+/* Rotate icon when menu is closed */
+.app-container:not(.menu-open) #menu-toggle-btn i {
+    transform: rotate(180deg);
+}
+
+/* Push the button right when the menu is open (Default state) */
+.app-container.menu-open #menu-toggle-btn {
+    left: 270px; /* Sidebar width (250px) + button left padding (20px) */
+}
+
+
+/* --------------------------------- */
+/* --- SPLASH SCREEN STYLES --- */
+/* --------------------------------- */
+#splash-screen {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    
+    background-color: rgba(0, 0, 0, 0.98);
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    
+    color: var(--text-color);
+    font-size: 1.5em; 
+    font-weight: 700;
+    
+    cursor: pointer;
+    z-index: 9999; 
+
+    transition: opacity 1s ease-out, visibility 1s; 
+}
+
+/* Class added by JavaScript to start the fade out */
+#splash-screen.fade-out {
+    opacity: 0;
+    visibility: hidden; 
+}
+
+/* Fancy font and white glow */
+.splash-text {
+    font-family: 'Fugaz One', cursive;
+    
+    text-shadow: 0 0 10px #ffffff,
+                 0 0 20px #ffffff,
+                 0 0 40px #ffffff;
+                 
+    animation: pulse 1.5s infinite alternate;
+}
+
+@keyframes pulse {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0.7;
+    }
+}
+
+
+/* ----------------------------------------------------- */
+/* --- Mobile Responsiveness (Max-Width 768px) --- */
+/* ----------------------------------------------------- */
+@media (max-width: 768px) {
+    
+    /* 1. Main Application Container */
+    .app-container {
+        flex-direction: column;
+        width: 100%;
+        max-width: 100%;
+        height: 100vh;
+        border-radius: 0;
+        box-shadow: none;
+        overflow-y: auto;
+    }
+
+    /* 2. Sidebar (Menu) */
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: static; 
+        flex-direction: row;
+        justify-content: flex-start;
+        padding-bottom: 0;
+        border-right: none;
+        border-bottom: 1px solid rgba(54, 57, 63, 0.7);
+    }
+    
+    /* Hide the sidebar contents on mobile. */
+    .sidebar h2 {
+        display: none;
+    }
+    
+    .sidebar ul {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 0 10px;
+        flex-grow: 1;
+        justify-content: center;
+    }
+    
+    .sidebar li a {
+        padding: 10px 15px;
+        border-radius: 5px;
+        margin: 5px;
+        border-radius: 5px !important; 
+    }
+    
+    /* Active Link Styles for Mobile */
+    .app-container:has(#linktree-view:target) .sidebar li a[href="#linktree-view"],
+    .app-container:has(#about-view:target) .sidebar li a[href="#about-view"],
+    .app-container:has(#more-view:target) .sidebar li a[href="#more-view"],
+    .app-container:has(#music-view:target) .sidebar li a[href="#music-view"],
+    body:not(:has(:target)) .sidebar li a[href="#linktree-view"] {
+        border-radius: 5px !important;
+    }
+
+    /* 3. Music Player Controls */
+    .music-player-controls {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        z-index: 10;
+        
+        background-color: var(--card-color); 
+        border-top: 1px solid var(--primary-color);
+        padding: 10px 20px;
+        margin-top: 0;
+    }
+    
+    .music-player-controls h3 {
+        display: none;
+    }
+
+    .content-area {
+        padding-bottom: 120px;
+        width: 100%;
+    }
+    
+    /* 4. Linktree Link Section */
+    .links-section {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+    }
+    
+    .link-item {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .link-icon {
+        width: 30px;
+        height: 30px;
+    }
+    
+    /* 5. Reduce padding on content views */
+    #about-view, #more-view, #music-view {
+        padding-top: 30px;
+    }
+
+    .about-content {
+        padding: 20px;
+    }
+
+    /* Adjust music cover size for mobile */
+    .music-cover-container {
+        margin-bottom: 20px;
+    }
+    
+    .music-cover {
+        width: 150px;
+        height: 150px;
+        border-width: 3px;
+    }
+
+    /* 6. Hide the desktop toggle button on mobile */
+    #menu-toggle-btn {
+        display: none;
+    }
+
+    /* 7. Remove splash screen animation effect that relies on screen size */
+    .splash-text {
+        font-size: 1.2em;
+    }
+}
