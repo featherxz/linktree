@@ -61,7 +61,7 @@ body {
     transition: width 0.3s ease, padding 0.3s ease, border-right 0.3s ease; 
 }
 
-/* HIDE SIDEBAR STRUCTURALLY WHEN .menu-open IS NOT PRESENT */
+/* HIDE SIDEBAR STRUCTURALLY WHEN .menu-open IS NOT PRESENT (DESKTOP COLLAPSE) */
 .app-container:not(.menu-open) .sidebar {
     width: 0;
     padding: 0;
@@ -742,45 +742,68 @@ body:not(:has(:target)) #linktree-view {
         overflow-y: auto;
     }
 
-    /* 2. Sidebar (Menu) */
+    /* 2. Sidebar (Menu) - Mobile Slide-Over Implementation */
     .sidebar {
-        width: 100%;
-        height: auto;
-        position: static; 
-        flex-direction: row;
-        justify-content: flex-start;
-        padding-bottom: 0;
-        border-right: none;
-        border-bottom: 1px solid rgba(54, 57, 63, 0.7);
+        /* OVERRIDE DESKTOP STYLES FOR MOBILE SLIDE-OVER MENU */
+        width: 280px; /* New explicit width for mobile slide-over */
+        height: 100vh;
+        position: fixed; /* Make it fixed so it slides over content */
+        top: 0;
+        left: 0;
+        z-index: 100; /* Higher z-index to cover content */
+        
+        /* Transition for the slide effect */
+        transform: translateX(-100%); 
+        transition: transform 0.3s ease-out; 
+
+        /* Revert to column layout for a full-height menu on mobile */
+        flex-direction: column;
+        justify-content: space-between;
+        padding-top: 30px; 
+        padding-bottom: 20px;
+        border-right: 1px solid rgba(54, 57, 63, 0.7); /* Add right border back */
     }
     
-    /* Hide the sidebar contents on mobile. */
+    /* Show sidebar when .menu-open is present on mobile */
+    .app-container.menu-open .sidebar {
+        transform: translateX(0); /* Slide in */
+        width: 280px; /* Ensure width is kept for slide-in */
+        padding: 30px 0 20px; /* Restore padding that desktop collapse removed */
+        border-right: 1px solid rgba(54, 57, 63, 0.7);
+    }
+    
+    /* Explicitly make content visible for the mobile slide-in menu */
+    .app-container.menu-open .sidebar h2,
+    .app-container.menu-open .sidebar ul,
+    .app-container.menu-open .sidebar .music-player-controls {
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 0.3s ease 0.3s;
+    }
+
+    /* Reset/Re-apply vertical menu structure */
     .sidebar h2 {
-        display: none;
+        display: block; /* Show the title again */
+        padding: 0 20px;
     }
     
     .sidebar ul {
-        display: flex;
-        flex-wrap: wrap;
-        padding: 0 10px;
-        flex-grow: 1;
-        justify-content: center;
+        display: block; /* Back to vertical list */
+        padding: 0;
     }
     
     .sidebar li a {
-        padding: 10px 15px;
-        border-radius: 5px;
-        margin: 5px;
-        border-radius: 5px !important; 
+        padding: 15px 20px; /* Restore vertical padding */
+        margin: 0;
     }
-    
-    /* Active Link Styles for Mobile */
+
+    /* Fix: Link radius should be 0 5px 5px 0 for vertical links */
     .app-container:has(#linktree-view:target) .sidebar li a[href="#linktree-view"],
     .app-container:has(#about-view:target) .sidebar li a[href="#about-view"],
     .app-container:has(#more-view:target) .sidebar li a[href="#more-view"],
     .app-container:has(#music-view:target) .sidebar li a[href="#music-view"],
     body:not(:has(:target)) .sidebar li a[href="#linktree-view"] {
-        border-radius: 5px !important;
+        border-radius: 0 5px 5px 0 !important; /* Revert to right-side emphasis */
     }
 
     /* 3. Music Player Controls */
@@ -803,9 +826,23 @@ body:not(:has(:target)) #linktree-view {
 
     .content-area {
         padding-bottom: 120px;
+        padding-top: 70px; /* Added padding to account for the menu toggle button */
         width: 100%;
     }
     
+    /* 6. Show the menu toggle button on mobile and adjust its position */
+    #menu-toggle-btn {
+        display: block; /* Show the button on mobile */
+        position: fixed; /* Keep it fixed over content */
+        left: 20px;
+        z-index: 100; /* Ensure it's above everything */
+    }
+    
+    /* Button position when menu is open on mobile */
+    .app-container.menu-open #menu-toggle-btn {
+        left: 300px; /* Sidebar width (280px) + button left padding (20px) */
+    }
+
     /* 4. Linktree Link Section */
     .links-section {
         flex-wrap: wrap;
@@ -841,11 +878,6 @@ body:not(:has(:target)) #linktree-view {
         width: 150px;
         height: 150px;
         border-width: 3px;
-    }
-
-    /* 6. Hide the desktop toggle button on mobile */
-    #menu-toggle-btn {
-        display: none;
     }
 
     /* 7. Remove splash screen animation effect that relies on screen size */
