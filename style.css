@@ -671,6 +671,11 @@ body:not(:has(:target)) #linktree-view {
     left: 270px; /* Sidebar width (250px) + button left padding (20px) */
 }
 
+/* Hide button on desktop when the menu is collapsed to 0 width */
+.app-container:not(.menu-open) #menu-toggle-btn {
+    display: none; 
+}
+
 
 /* --------------------------------- */
 /* --- SPLASH SCREEN STYLES --- */
@@ -826,21 +831,27 @@ body:not(:has(:target)) #linktree-view {
 
     .content-area {
         padding-bottom: 120px;
-        padding-top: 70px; /* Added padding to account for the menu toggle button */
+        padding-top: 70px; 
         width: 100%;
     }
     
     /* 6. Show the menu toggle button on mobile and adjust its position */
     #menu-toggle-btn {
-        display: block; /* Show the button on mobile */
-        position: fixed; /* Keep it fixed over content */
+        display: block !important; /* FORCE display on mobile */
+        position: fixed; 
+        top: 20px;
         left: 20px;
-        z-index: 100; /* Ensure it's above everything */
+        z-index: 1000; /* Ensure it's above everything */
     }
     
     /* Button position when menu is open on mobile */
     .app-container.menu-open #menu-toggle-btn {
-        left: 300px; /* Sidebar width (280px) + button left padding (20px) */
+        left: 300px; /* Sidebar width (280px) + 20px padding */
+    }
+
+    /* Fix: Rotate icon when menu is closed for mobile */
+    .app-container:not(.menu-open) #menu-toggle-btn i {
+        transform: rotate(180deg);
     }
 
     /* 4. Linktree Link Section */
